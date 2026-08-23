@@ -90,6 +90,13 @@ class Custom_Theme_Elementor_Integration {
             require_once $list_widget_file;
             $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Post_List() );
         }
+
+        // Widget 4: Magazine Compact Spotlight
+        $spotlight_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-compact-spotlight.php';
+        if ( file_exists( $spotlight_widget_file ) ) {
+            require_once $spotlight_widget_file;
+            $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Compact_Spotlight() );
+        }
     }
 
     /**
@@ -117,6 +124,12 @@ class Custom_Theme_Elementor_Integration {
         if ( file_exists( $list_widget_file ) ) {
             require_once $list_widget_file;
             $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Post_List() );
+        }
+
+        $spotlight_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-compact-spotlight.php';
+        if ( file_exists( $spotlight_widget_file ) ) {
+            require_once $spotlight_widget_file;
+            $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Compact_Spotlight() );
         }
     }
 }

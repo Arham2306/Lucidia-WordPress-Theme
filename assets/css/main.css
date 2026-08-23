@@ -3367,15 +3367,36 @@ body.drawer-open {
    16. Compact Card & Magazine Spotlight List
    ========================================================================== */
 
-.compact-cards-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
+.compact-cards-list,
+.compact-spotlight-container {
+    display: grid;
+    width: 100%;
+}
+
+.compact-spotlight-container.style-borderless .article-card-compact {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+.compact-spotlight-container.style-divided .article-card-compact {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid var(--color-border-subtle);
+    border-radius: 0;
+    box-shadow: none;
+    padding: var(--space-sm) 0;
+}
+
+.compact-spotlight-container.style-divided .article-card-compact:last-child {
+    border-bottom: none;
 }
 
 .article-card-compact {
     display: grid;
-    grid-template-columns: 140px 1fr;
+    grid-template-columns: auto 110px 1fr;
+    align-items: center;
     gap: var(--space-md);
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -3384,17 +3405,101 @@ body.drawer-open {
     transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
+.article-card-compact.no-rank {
+    grid-template-columns: 110px 1fr;
+}
+
+.article-card-compact.img-on-right {
+    grid-template-columns: auto 1fr 110px;
+}
+
+.article-card-compact.img-on-right .card-compact-media {
+    order: 3;
+}
+
+.article-card-compact.img-on-right .card-compact-content {
+    order: 2;
+}
+
+.article-card-compact.img-on-right .spotlight-rank-badge {
+    order: 1;
+}
+
+.article-card-compact.no-media {
+    grid-template-columns: auto 1fr !important;
+}
+
+.article-card-compact.no-media.no-rank {
+    grid-template-columns: 1fr !important;
+}
+
+.article-card-compact.no-media .card-compact-content {
+    width: 100%;
+}
+
 .article-card-compact:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
     border-color: var(--color-border-hover);
 }
 
+.spotlight-rank-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.spotlight-rank-badge.style-number_bold {
+    font-size: 1.75rem;
+    font-weight: 800;
+    font-family: var(--font-heading, sans-serif);
+    color: var(--color-border);
+    line-height: 1;
+    min-width: 36px;
+}
+
+.spotlight-rank-badge.style-pill_solid {
+    font-size: 0.85rem;
+    font-weight: 700;
+    background-color: var(--color-accent);
+    color: #ffffff;
+    border-radius: var(--radius-full);
+    width: 28px;
+    height: 28px;
+}
+
+.spotlight-rank-badge.style-pill_outline {
+    font-size: 0.85rem;
+    font-weight: 700;
+    background-color: transparent;
+    color: var(--color-text-main);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-full);
+    width: 28px;
+    height: 28px;
+}
+
 .card-compact-media {
+    position: relative;
     border-radius: var(--radius-sm);
     overflow: hidden;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 1 / 1;
     background-color: var(--color-surface-subtle);
+}
+
+.spotlight-rank-badge.style-overlay_media {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background-color: var(--color-accent);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    padding: 2px 6px;
+    z-index: 2;
 }
 
 .card-compact-media img {
