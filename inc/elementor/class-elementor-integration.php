@@ -97,6 +97,13 @@ class Custom_Theme_Elementor_Integration {
             require_once $spotlight_widget_file;
             $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Compact_Spotlight() );
         }
+
+        // Widget 5: Classic Editorial Stream
+        $stream_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-classic-stream.php';
+        if ( file_exists( $stream_widget_file ) ) {
+            require_once $stream_widget_file;
+            $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Classic_Stream() );
+        }
     }
 
     /**
@@ -130,6 +137,12 @@ class Custom_Theme_Elementor_Integration {
         if ( file_exists( $spotlight_widget_file ) ) {
             require_once $spotlight_widget_file;
             $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Compact_Spotlight() );
+        }
+
+        $stream_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-classic-stream.php';
+        if ( file_exists( $stream_widget_file ) ) {
+            require_once $stream_widget_file;
+            $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Classic_Stream() );
         }
     }
 }
