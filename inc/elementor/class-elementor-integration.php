@@ -118,6 +118,13 @@ class Custom_Theme_Elementor_Integration {
             require_once $newsletter_widget_file;
             $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Newsletter_Box() );
         }
+
+        // Widget 8: Author Spotlight Card
+        $author_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-author-box.php';
+        if ( file_exists( $author_widget_file ) ) {
+            require_once $author_widget_file;
+            $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Author_Box() );
+        }
     }
 
     /**
@@ -169,6 +176,12 @@ class Custom_Theme_Elementor_Integration {
         if ( file_exists( $newsletter_widget_file ) ) {
             require_once $newsletter_widget_file;
             $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Newsletter_Box() );
+        }
+
+        $author_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-author-box.php';
+        if ( file_exists( $author_widget_file ) ) {
+            require_once $author_widget_file;
+            $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Author_Box() );
         }
     }
 }
