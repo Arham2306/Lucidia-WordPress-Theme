@@ -104,6 +104,13 @@ class Custom_Theme_Elementor_Integration {
             require_once $stream_widget_file;
             $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Classic_Stream() );
         }
+
+        // Widget 6: Section Header Bar
+        $header_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-section-header.php';
+        if ( file_exists( $header_widget_file ) ) {
+            require_once $header_widget_file;
+            $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Section_Header() );
+        }
     }
 
     /**
@@ -143,6 +150,12 @@ class Custom_Theme_Elementor_Integration {
         if ( file_exists( $stream_widget_file ) ) {
             require_once $stream_widget_file;
             $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Classic_Stream() );
+        }
+
+        $header_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-section-header.php';
+        if ( file_exists( $header_widget_file ) ) {
+            require_once $header_widget_file;
+            $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Section_Header() );
         }
     }
 }
