@@ -191,7 +191,7 @@ $social_youtube   = get_theme_mod( 'custom_theme_social_youtube', '' );
                 <p class="credit-text">
                     <?php
                     /* translators: %s: Theme name */
-                    printf( esc_html__( 'Designed with %s for WordPress', 'custom-theme' ), '<span>Custom Editorial</span>' );
+                    printf( esc_html__( 'Designed with %s for WordPress', 'custom-theme' ), '<span>Lucidia</span>' );
                     ?>
                 </p>
             </div>

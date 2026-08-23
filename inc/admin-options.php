@@ -351,7 +351,7 @@ function custom_theme_render_options_page() {
         <!-- Header Banner -->
         <header class="theme-admin-header">
             <div class="theme-header-left">
-                <div class="theme-header-badge"><?php esc_html_e( 'Editorial Theme', 'custom-theme' ); ?></div>
+                <div class="theme-header-badge"><?php esc_html_e( 'Lucidia Editorial', 'custom-theme' ); ?></div>
                 <h1 class="theme-admin-title"><?php esc_html_e( 'Theme Customization', 'custom-theme' ); ?></h1>
                 <p class="theme-admin-subtitle"><?php esc_html_e( 'Manage all your theme options, colors, header layouts, dark mode, and typography in one central dashboard.', 'custom-theme' ); ?></p>
             </div>

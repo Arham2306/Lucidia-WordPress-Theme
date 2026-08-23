@@ -205,6 +205,9 @@ if ( file_exists( CUSTOM_THEME_DIR . '/inc/customizer.php' ) ) {
 if ( is_admin() && file_exists( CUSTOM_THEME_DIR . '/inc/admin-options.php' ) ) {
     require_once CUSTOM_THEME_DIR . '/inc/admin-options.php';
 }
+if ( file_exists( CUSTOM_THEME_DIR . '/inc/elementor/class-elementor-integration.php' ) ) {
+    require_once CUSTOM_THEME_DIR . '/inc/elementor/class-elementor-integration.php';
+}
 
 // Google Fonts preconnect removed — fonts are now self-hosted in assets/fonts/.
 
@@ -245,7 +248,7 @@ function custom_theme_register_pattern_category() {
     register_block_pattern_category(
         'custom-theme',
         array(
-            'label'       => esc_html__( 'Custom Editorial', 'custom-theme' ),
+            'label'       => esc_html__( 'Lucidia', 'custom-theme' ),
             'description' => esc_html__( 'Ready-made editorial content sections for your blog.', 'custom-theme' ),
         )
     );

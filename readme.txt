@@ -1,4 +1,4 @@
-=== Custom Editorial ===
+=== Lucidia ===
 Contributors: customthemedev
 Requires at least: 6.0
 Tested up to: 6.7
@@ -10,7 +10,7 @@ Tags: blog, news, magazine, custom-colors, custom-menu, custom-logo, editor-styl
 
 == Description ==
 
-Custom Editorial is a modern, high-performance, lightweight editorial WordPress theme built for publications, magazines, and bloggers.
+Lucidia is a modern, high-performance, lightweight editorial WordPress theme built for publications, magazines, and bloggers.
 
 Features:
 * Dark Mode with instant toggle, Customizer defaults, and OS auto-detection
