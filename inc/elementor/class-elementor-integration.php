@@ -111,6 +111,13 @@ class Custom_Theme_Elementor_Integration {
             require_once $header_widget_file;
             $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Section_Header() );
         }
+
+        // Widget 7: Newsletter Subscription Box
+        $newsletter_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-newsletter-box.php';
+        if ( file_exists( $newsletter_widget_file ) ) {
+            require_once $newsletter_widget_file;
+            $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Newsletter_Box() );
+        }
     }
 
     /**
@@ -156,6 +163,12 @@ class Custom_Theme_Elementor_Integration {
         if ( file_exists( $header_widget_file ) ) {
             require_once $header_widget_file;
             $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Section_Header() );
+        }
+
+        $newsletter_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-newsletter-box.php';
+        if ( file_exists( $newsletter_widget_file ) ) {
+            require_once $newsletter_widget_file;
+            $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Newsletter_Box() );
         }
     }
 }
