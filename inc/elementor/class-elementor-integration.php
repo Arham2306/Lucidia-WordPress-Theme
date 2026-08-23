@@ -125,6 +125,13 @@ class Custom_Theme_Elementor_Integration {
             require_once $author_widget_file;
             $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Author_Box() );
         }
+
+        // Widget 9: Interactive Social Share Bar
+        $social_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-social-share.php';
+        if ( file_exists( $social_widget_file ) ) {
+            require_once $social_widget_file;
+            $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Social_Share() );
+        }
     }
 
     /**
@@ -182,6 +189,12 @@ class Custom_Theme_Elementor_Integration {
         if ( file_exists( $author_widget_file ) ) {
             require_once $author_widget_file;
             $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Author_Box() );
+        }
+
+        $social_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-social-share.php';
+        if ( file_exists( $social_widget_file ) ) {
+            require_once $social_widget_file;
+            $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Social_Share() );
         }
     }
 }
