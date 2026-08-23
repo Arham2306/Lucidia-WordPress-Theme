@@ -83,6 +83,13 @@ class Custom_Theme_Elementor_Integration {
             require_once $grid_widget_file;
             $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Post_Grid() );
         }
+
+        // Widget 3: Horizontal Post List
+        $list_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-post-list.php';
+        if ( file_exists( $list_widget_file ) ) {
+            require_once $list_widget_file;
+            $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Post_List() );
+        }
     }
 
     /**
@@ -104,6 +111,12 @@ class Custom_Theme_Elementor_Integration {
         if ( file_exists( $grid_widget_file ) ) {
             require_once $grid_widget_file;
             $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Post_Grid() );
+        }
+
+        $list_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-post-list.php';
+        if ( file_exists( $list_widget_file ) ) {
+            require_once $list_widget_file;
+            $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Post_List() );
         }
     }
 }
