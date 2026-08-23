@@ -1,9 +1,9 @@
 <?php
 /**
- * Elementor Widget: Hero Featured Story
+ * Elementor Widget: Editorial Posts Grid
  *
- * Displays a high-impact editorial hero featured post with comprehensive query,
- * layout, element, and styling customization.
+ * Displays a multi-column responsive grid of editorial posts with advanced querying,
+ * layout presets, card design controls, and metadata toggles.
  *
  * @package Custom_Theme
  */
@@ -15,14 +15,13 @@ use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Border;
-use Elementor\Group_Control_Background;
 use Elementor\Group_Control_Css_Filter;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
-class Hero_Post extends Widget_Base {
+class Post_Grid extends Widget_Base {
 
     /**
      * Get Widget Name
@@ -30,7 +29,7 @@ class Hero_Post extends Widget_Base {
      * @return string
      */
     public function get_name() {
-        return 'custom_theme_hero_post';
+        return 'custom_theme_post_grid';
     }
 
     /**
@@ -39,7 +38,7 @@ class Hero_Post extends Widget_Base {
      * @return string
      */
     public function get_title() {
-        return esc_html__( 'Hero Featured Story', 'custom-theme' );
+        return esc_html__( 'Editorial Posts Grid', 'custom-theme' );
     }
 
     /**
@@ -48,7 +47,7 @@ class Hero_Post extends Widget_Base {
      * @return string
      */
     public function get_icon() {
-        return 'eicon-featured-image';
+        return 'eicon-posts-grid';
     }
 
     /**
@@ -66,7 +65,7 @@ class Hero_Post extends Widget_Base {
      * @return array
      */
     public function get_keywords() {
-        return array( 'hero', 'featured', 'post', 'article', 'editorial', 'story', 'banner', 'spotlight', 'lead' );
+        return array( 'posts', 'grid', 'cards', 'articles', 'editorial', 'blog', 'magazine', 'feed', 'latest' );
     }
 
     /**
@@ -134,18 +133,29 @@ class Hero_Post extends Widget_Base {
         );
 
         $this->add_control(
+            'posts_per_page',
+            array(
+                'label'   => esc_html__( 'Number of Posts', 'custom-theme' ),
+                'type'    => Controls_Manager::NUMBER,
+                'default' => 6,
+                'min'     => 1,
+                'max'     => 48,
+            )
+        );
+
+        $this->add_control(
             'query_source',
             array(
                 'label'   => esc_html__( 'Source', 'custom-theme' ),
                 'type'    => Controls_Manager::SELECT,
                 'default' => 'latest',
                 'options' => array(
-                    'latest'   => esc_html__( 'Latest Post', 'custom-theme' ),
-                    'sticky'   => esc_html__( 'Sticky / Featured Post', 'custom-theme' ),
+                    'latest'   => esc_html__( 'Latest Posts', 'custom-theme' ),
+                    'sticky'   => esc_html__( 'Sticky / Featured Posts', 'custom-theme' ),
                     'category' => esc_html__( 'Filter by Category', 'custom-theme' ),
                     'tag'      => esc_html__( 'Filter by Tag', 'custom-theme' ),
                     'author'   => esc_html__( 'Filter by Author', 'custom-theme' ),
-                    'manual'   => esc_html__( 'Specific Post (by ID)', 'custom-theme' ),
+                    'manual'   => esc_html__( 'Specific Posts (by IDs)', 'custom-theme' ),
                 ),
             )
         );
@@ -194,11 +204,12 @@ class Hero_Post extends Widget_Base {
         );
 
         $this->add_control(
-            'manual_post_id',
+            'manual_post_ids',
             array(
-                'label'       => esc_html__( 'Post ID', 'custom-theme' ),
-                'type'        => Controls_Manager::NUMBER,
-                'placeholder' => esc_html__( 'e.g. 124', 'custom-theme' ),
+                'label'       => esc_html__( 'Post IDs', 'custom-theme' ),
+                'type'        => Controls_Manager::TEXT,
+                'placeholder' => esc_html__( 'e.g. 12, 45, 89', 'custom-theme' ),
+                'description' => esc_html__( 'Comma-separated list of post IDs.', 'custom-theme' ),
                 'condition'   => array(
                     'query_source' => 'manual',
                 ),
@@ -215,7 +226,7 @@ class Hero_Post extends Widget_Base {
                     'date'          => esc_html__( 'Date Published', 'custom-theme' ),
                     'modified'      => esc_html__( 'Last Modified', 'custom-theme' ),
                     'title'         => esc_html__( 'Post Title', 'custom-theme' ),
-                    'comment_count' => esc_html__( 'Comment Count (Popular)', 'custom-theme' ),
+                    'comment_count' => esc_html__( 'Comment Count (Popularity)', 'custom-theme' ),
                     'rand'          => esc_html__( 'Random', 'custom-theme' ),
                     'ID'            => esc_html__( 'Post ID', 'custom-theme' ),
                 ),
@@ -232,8 +243,8 @@ class Hero_Post extends Widget_Base {
                 'type'      => Controls_Manager::SELECT,
                 'default'   => 'DESC',
                 'options'   => array(
-                    'DESC' => esc_html__( 'Descending (3, 2, 1)', 'custom-theme' ),
-                    'ASC'  => esc_html__( 'Ascending (1, 2, 3)', 'custom-theme' ),
+                    'DESC' => esc_html__( 'Descending (Newest first)', 'custom-theme' ),
+                    'ASC'  => esc_html__( 'Ascending (Oldest first)', 'custom-theme' ),
                 ),
                 'condition' => array(
                     'query_source!' => array( 'manual', 'rand' ),
@@ -249,7 +260,7 @@ class Hero_Post extends Widget_Base {
                 'default'     => 0,
                 'min'         => 0,
                 'max'         => 100,
-                'description' => esc_html__( 'Skip a number of posts (useful to avoid duplicating items from other grids).', 'custom-theme' ),
+                'description' => esc_html__( 'Skip a number of posts (e.g. 1 if you have a Hero story above).', 'custom-theme' ),
                 'condition'   => array(
                     'query_source!' => 'manual',
                 ),
@@ -277,7 +288,7 @@ class Hero_Post extends Widget_Base {
                 'label'       => esc_html__( 'Exclude Post IDs', 'custom-theme' ),
                 'type'        => Controls_Manager::TEXT,
                 'placeholder' => esc_html__( 'e.g. 10, 24, 56', 'custom-theme' ),
-                'description' => esc_html__( 'Comma-separated post IDs to exclude from this hero card.', 'custom-theme' ),
+                'description' => esc_html__( 'Comma-separated post IDs to exclude from this grid.', 'custom-theme' ),
                 'condition'   => array(
                     'query_source!' => 'manual',
                 ),
@@ -306,133 +317,111 @@ class Hero_Post extends Widget_Base {
         $this->end_controls_section();
 
         // =========================================================================
-        // CONTENT TAB: Layout & Structure
+        // CONTENT TAB: Layout & Grid Columns
         // =========================================================================
         $this->start_controls_section(
-            'section_layout',
+            'section_grid_layout',
             array(
-                'label' => esc_html__( 'Layout & Structure', 'custom-theme' ),
+                'label' => esc_html__( 'Grid Layout', 'custom-theme' ),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             )
         );
 
-        $this->add_control(
-            'layout_style',
+        $this->add_responsive_control(
+            'grid_columns',
             array(
-                'label'   => esc_html__( 'Layout Style', 'custom-theme' ),
-                'type'    => Controls_Manager::SELECT,
-                'default' => 'split',
-                'options' => array(
-                    'split'   => esc_html__( 'Split Card (Side-by-Side)', 'custom-theme' ),
-                    'cover'   => esc_html__( 'Cover Card (Full-Bleed Overlay)', 'custom-theme' ),
-                    'stacked' => esc_html__( 'Stacked (Top Media, Bottom Content)', 'custom-theme' ),
+                'label'          => esc_html__( 'Columns', 'custom-theme' ),
+                'type'           => Controls_Manager::SELECT,
+                'default'        => '3',
+                'tablet_default' => '2',
+                'mobile_default' => '1',
+                'options'        => array(
+                    '1' => '1 Column',
+                    '2' => '2 Columns',
+                    '3' => '3 Columns',
+                    '4' => '4 Columns',
+                    '5' => '5 Columns',
+                    '6' => '6 Columns',
                 ),
-            )
-        );
-
-        $this->add_control(
-            'image_position',
-            array(
-                'label'     => esc_html__( 'Image Position', 'custom-theme' ),
-                'type'      => Controls_Manager::CHOOSE,
-                'options'   => array(
-                    'left'  => array(
-                        'title' => esc_html__( 'Left', 'custom-theme' ),
-                        'icon'  => 'eicon-h-align-left',
-                    ),
-                    'right' => array(
-                        'title' => esc_html__( 'Right', 'custom-theme' ),
-                        'icon'  => 'eicon-h-align-right',
-                    ),
-                ),
-                'default'   => 'left',
-                'condition' => array(
-                    'layout_style' => 'split',
+                'selectors'      => array(
+                    '{{WRAPPER}} .editorial-posts-grid' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
                 ),
             )
         );
 
         $this->add_responsive_control(
-            'split_image_ratio',
+            'column_gap',
             array(
-                'label'      => esc_html__( 'Image Column Width (%)', 'custom-theme' ),
+                'label'      => esc_html__( 'Column Gap', 'custom-theme' ),
                 'type'       => Controls_Manager::SLIDER,
-                'size_units' => array( '%' ),
-                'range'      => array(
-                    '%' => array(
-                        'min' => 25,
-                        'max' => 75,
-                        'step' => 1,
-                    ),
-                ),
-                'default'    => array(
-                    'unit' => '%',
-                    'size' => 55,
-                ),
-                'condition'  => array(
-                    'layout_style' => 'split',
-                ),
-                'selectors'  => array(
-                    '{{WRAPPER}} .featured-hero-inner:not(.img-on-right)' => 'grid-template-columns: {{SIZE}}% calc(100% - {{SIZE}}%);',
-                    '{{WRAPPER}} .featured-hero-inner.img-on-right'        => 'grid-template-columns: calc(100% - {{SIZE}}%) {{SIZE}}%;',
-                ),
-            )
-        );
-
-        $this->add_responsive_control(
-            'content_valign',
-            array(
-                'label'     => esc_html__( 'Content Vertical Alignment', 'custom-theme' ),
-                'type'      => Controls_Manager::CHOOSE,
-                'options'   => array(
-                    'flex-start'    => array(
-                        'title' => esc_html__( 'Top', 'custom-theme' ),
-                        'icon'  => 'eicon-v-align-top',
-                    ),
-                    'center'        => array(
-                        'title' => esc_html__( 'Center', 'custom-theme' ),
-                        'icon'  => 'eicon-v-align-middle',
-                    ),
-                    'flex-end'      => array(
-                        'title' => esc_html__( 'Bottom', 'custom-theme' ),
-                        'icon'  => 'eicon-v-align-bottom',
-                    ),
-                    'space-between' => array(
-                        'title' => esc_html__( 'Space Between', 'custom-theme' ),
-                        'icon'  => 'eicon-v-align-stretch',
-                    ),
-                ),
-                'default'   => 'center',
-                'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-content' => 'justify-content: {{VALUE}};',
-                ),
-            )
-        );
-
-        $this->add_responsive_control(
-            'min_height',
-            array(
-                'label'      => esc_html__( 'Card Min Height', 'custom-theme' ),
-                'type'       => Controls_Manager::SLIDER,
-                'size_units' => array( 'px', 'vh' ),
+                'size_units' => array( 'px', 'rem' ),
                 'range'      => array(
                     'px' => array(
-                        'min' => 250,
-                        'max' => 900,
-                    ),
-                    'vh' => array(
-                        'min' => 20,
-                        'max' => 100,
+                        'min' => 0,
+                        'max' => 60,
                     ),
                 ),
                 'default'    => array(
                     'unit' => 'px',
-                    'size' => 440,
+                    'size' => 24,
                 ),
                 'selectors'  => array(
-                    '{{WRAPPER}} .featured-article-hero' => 'min-height: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}} .featured-hero-inner'   => 'min-height: {{SIZE}}{{UNIT}};',
-                    '{{WRAPPER}} .featured-hero-cover'   => 'min-height: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .editorial-posts-grid' => 'column-gap: {{SIZE}}{{UNIT}};',
+                ),
+            )
+        );
+
+        $this->add_responsive_control(
+            'row_gap',
+            array(
+                'label'      => esc_html__( 'Row Gap', 'custom-theme' ),
+                'type'       => Controls_Manager::SLIDER,
+                'size_units' => array( 'px', 'rem' ),
+                'range'      => array(
+                    'px' => array(
+                        'min' => 0,
+                        'max' => 80,
+                    ),
+                ),
+                'default'    => array(
+                    'unit' => 'px',
+                    'size' => 32,
+                ),
+                'selectors'  => array(
+                    '{{WRAPPER}} .editorial-posts-grid' => 'row-gap: {{SIZE}}{{UNIT}};',
+                ),
+            )
+        );
+
+        $this->add_control(
+            'card_style_preset',
+            array(
+                'label'   => esc_html__( 'Card Style Preset', 'custom-theme' ),
+                'type'    => Controls_Manager::SELECT,
+                'default' => 'standard',
+                'options' => array(
+                    'standard'   => esc_html__( 'Standard (Bordered Surface)', 'custom-theme' ),
+                    'borderless' => esc_html__( 'Borderless Minimal', 'custom-theme' ),
+                    'elevated'   => esc_html__( 'Elevated Floating Shadow', 'custom-theme' ),
+                ),
+            )
+        );
+
+        $this->add_control(
+            'image_aspect_ratio',
+            array(
+                'label'     => esc_html__( 'Image Aspect Ratio', 'custom-theme' ),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => '16/10',
+                'options'   => array(
+                    '16/10' => '16 : 10 (Editorial Standard)',
+                    '16/9'  => '16 : 9 (Cinematic Widescreen)',
+                    '4/3'   => '4 : 3 (Classic Photo)',
+                    '3/2'   => '3 : 2 (Standard Photo)',
+                    '1/1'   => '1 : 1 (Square)',
+                ),
+                'selectors' => array(
+                    '{{WRAPPER}} .card-media' => 'aspect-ratio: {{VALUE}};',
                 ),
             )
         );
@@ -445,12 +434,24 @@ class Hero_Post extends Widget_Base {
         $this->start_controls_section(
             'section_elements',
             array(
-                'label' => esc_html__( 'Elements & Content', 'custom-theme' ),
+                'label' => esc_html__( 'Card Elements', 'custom-theme' ),
                 'tab'   => Controls_Manager::TAB_CONTENT,
             )
         );
 
-        // Category Badge
+        // Media Elements
+        $this->add_control(
+            'show_thumbnail',
+            array(
+                'label'        => esc_html__( 'Featured Image', 'custom-theme' ),
+                'type'         => Controls_Manager::SWITCHER,
+                'label_on'     => esc_html__( 'Show', 'custom-theme' ),
+                'label_off'    => esc_html__( 'Hide', 'custom-theme' ),
+                'return_value' => 'yes',
+                'default'      => 'yes',
+            )
+        );
+
         $this->add_control(
             'show_badge',
             array(
@@ -471,7 +472,7 @@ class Hero_Post extends Widget_Base {
                 'default'   => 'overlay',
                 'options'   => array(
                     'overlay' => esc_html__( 'Overlay on Image', 'custom-theme' ),
-                    'inline'  => esc_html__( 'Inside Content (Above Title)', 'custom-theme' ),
+                    'inline'  => esc_html__( 'Above Title', 'custom-theme' ),
                 ),
                 'condition' => array(
                     'show_badge' => 'yes',
@@ -479,24 +480,42 @@ class Hero_Post extends Widget_Base {
             )
         );
 
-        // Title
+        // Title Elements
         $this->add_control(
             'title_tag',
             array(
                 'label'   => esc_html__( 'Title HTML Tag', 'custom-theme' ),
                 'type'    => Controls_Manager::SELECT,
-                'default' => 'h2',
+                'default' => 'h3',
                 'options' => array(
-                    'h1'   => 'H1',
                     'h2'   => 'H2',
                     'h3'   => 'H3',
                     'h4'   => 'H4',
+                    'h5'   => 'H5',
                     'div'  => 'div',
                 ),
             )
         );
 
-        // Excerpt
+        $this->add_control(
+            'title_lines',
+            array(
+                'label'     => esc_html__( 'Title Max Lines (Clamp)', 'custom-theme' ),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'none',
+                'options'   => array(
+                    'none' => esc_html__( 'No limit', 'custom-theme' ),
+                    '1'    => '1 Line',
+                    '2'    => '2 Lines',
+                    '3'    => '3 Lines',
+                ),
+                'selectors' => array(
+                    '{{WRAPPER}} .card-title' => '-webkit-line-clamp: {{VALUE}}; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;',
+                ),
+            )
+        );
+
+        // Excerpt Elements
         $this->add_control(
             'show_excerpt',
             array(
@@ -514,35 +533,43 @@ class Hero_Post extends Widget_Base {
             array(
                 'label'     => esc_html__( 'Excerpt Word Limit', 'custom-theme' ),
                 'type'      => Controls_Manager::NUMBER,
-                'default'   => 28,
+                'default'   => 18,
                 'min'       => 5,
-                'max'       => 150,
+                'max'       => 80,
                 'condition' => array(
                     'show_excerpt' => 'yes',
                 ),
             )
         );
 
-        // Meta Controls
         $this->add_control(
-            'heading_meta_elements',
+            'excerpt_lines',
             array(
-                'label'     => esc_html__( 'Metadata Byline', 'custom-theme' ),
-                'type'      => Controls_Manager::HEADING,
-                'separator' => 'before',
+                'label'     => esc_html__( 'Excerpt Max Lines', 'custom-theme' ),
+                'type'      => Controls_Manager::SELECT,
+                'default'   => 'none',
+                'options'   => array(
+                    'none' => esc_html__( 'No limit', 'custom-theme' ),
+                    '2'    => '2 Lines',
+                    '3'    => '3 Lines',
+                    '4'    => '4 Lines',
+                ),
+                'condition' => array(
+                    'show_excerpt' => 'yes',
+                ),
+                'selectors' => array(
+                    '{{WRAPPER}} .card-excerpt' => '-webkit-line-clamp: {{VALUE}}; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;',
+                ),
             )
         );
 
+        // Metadata Byline Elements
         $this->add_control(
-            'meta_position',
+            'heading_meta_elements',
             array(
-                'label'   => esc_html__( 'Meta Position', 'custom-theme' ),
-                'type'    => Controls_Manager::SELECT,
-                'default' => 'below_excerpt',
-                'options' => array(
-                    'above_title'   => esc_html__( 'Above Title', 'custom-theme' ),
-                    'below_excerpt' => esc_html__( 'Below Excerpt', 'custom-theme' ),
-                ),
+                'label'     => esc_html__( 'Metadata Row', 'custom-theme' ),
+                'type'      => Controls_Manager::HEADING,
+                'separator' => 'before',
             )
         );
 
@@ -608,56 +635,31 @@ class Hero_Post extends Widget_Base {
                     'slash'  => esc_html__( '/ Slash', 'custom-theme' ),
                     'dash'   => esc_html__( '– Dash', 'custom-theme' ),
                     'pipe'   => esc_html__( '| Pipe', 'custom-theme' ),
-                    'none'   => esc_html__( 'None (Spacing Only)', 'custom-theme' ),
+                    'none'   => esc_html__( 'None', 'custom-theme' ),
                 ),
             )
         );
 
-        // CTA Button
+        // Pagination
         $this->add_control(
-            'heading_cta_settings',
+            'heading_pagination',
             array(
-                'label'     => esc_html__( 'Call to Action Button', 'custom-theme' ),
+                'label'     => esc_html__( 'Pagination', 'custom-theme' ),
                 'type'      => Controls_Manager::HEADING,
                 'separator' => 'before',
             )
         );
 
         $this->add_control(
-            'show_cta',
+            'pagination_type',
             array(
-                'label'        => esc_html__( 'CTA Button', 'custom-theme' ),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__( 'Show', 'custom-theme' ),
-                'label_off'    => esc_html__( 'Hide', 'custom-theme' ),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-            )
-        );
-
-        $this->add_control(
-            'cta_text',
-            array(
-                'label'       => esc_html__( 'Button Text', 'custom-theme' ),
-                'type'        => Controls_Manager::TEXT,
-                'default'     => esc_html__( 'Read Full Article', 'custom-theme' ),
-                'condition'   => array(
-                    'show_cta' => 'yes',
-                ),
-            )
-        );
-
-        $this->add_control(
-            'show_cta_icon',
-            array(
-                'label'        => esc_html__( 'Show Arrow Icon', 'custom-theme' ),
-                'type'         => Controls_Manager::SWITCHER,
-                'label_on'     => esc_html__( 'Yes', 'custom-theme' ),
-                'label_off'    => esc_html__( 'No', 'custom-theme' ),
-                'return_value' => 'yes',
-                'default'      => 'yes',
-                'condition'    => array(
-                    'show_cta' => 'yes',
+                'label'   => esc_html__( 'Pagination Type', 'custom-theme' ),
+                'type'    => Controls_Manager::SELECT,
+                'default' => 'none',
+                'options' => array(
+                    'none'      => esc_html__( 'None', 'custom-theme' ),
+                    'numbers'   => esc_html__( 'Numbered Page Links', 'custom-theme' ),
+                    'prev_next' => esc_html__( 'Previous / Next Links', 'custom-theme' ),
                 ),
             )
         );
@@ -668,17 +670,17 @@ class Hero_Post extends Widget_Base {
         // STYLE TAB: Card Container
         // =========================================================================
         $this->start_controls_section(
-            'section_style_container',
+            'section_style_cards',
             array(
                 'label' => esc_html__( 'Card Container', 'custom-theme' ),
                 'tab'   => Controls_Manager::TAB_STYLE,
             )
         );
 
-        $this->start_controls_tabs( 'tabs_container_style' );
+        $this->start_controls_tabs( 'tabs_card_style' );
 
         $this->start_controls_tab(
-            'tab_container_normal',
+            'tab_card_normal',
             array(
                 'label' => esc_html__( 'Normal', 'custom-theme' ),
             )
@@ -690,7 +692,7 @@ class Hero_Post extends Widget_Base {
                 'label'     => esc_html__( 'Background Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-article-hero' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} .article-card' => 'background-color: {{VALUE}};',
                 ),
             )
         );
@@ -699,7 +701,7 @@ class Hero_Post extends Widget_Base {
             Group_Control_Box_Shadow::get_type(),
             array(
                 'name'     => 'card_box_shadow',
-                'selector' => '{{WRAPPER}} .featured-article-hero',
+                'selector' => '{{WRAPPER}} .article-card',
             )
         );
 
@@ -707,14 +709,14 @@ class Hero_Post extends Widget_Base {
             Group_Control_Border::get_type(),
             array(
                 'name'     => 'card_border',
-                'selector' => '{{WRAPPER}} .featured-article-hero',
+                'selector' => '{{WRAPPER}} .article-card',
             )
         );
 
         $this->end_controls_tab();
 
         $this->start_controls_tab(
-            'tab_container_hover',
+            'tab_card_hover',
             array(
                 'label' => esc_html__( 'Hover', 'custom-theme' ),
             )
@@ -726,7 +728,7 @@ class Hero_Post extends Widget_Base {
                 'label'     => esc_html__( 'Background Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-article-hero:hover' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} .article-card:hover' => 'background-color: {{VALUE}};',
                 ),
             )
         );
@@ -735,7 +737,7 @@ class Hero_Post extends Widget_Base {
             Group_Control_Box_Shadow::get_type(),
             array(
                 'name'     => 'card_hover_box_shadow',
-                'selector' => '{{WRAPPER}} .featured-article-hero:hover',
+                'selector' => '{{WRAPPER}} .article-card:hover',
             )
         );
 
@@ -745,7 +747,7 @@ class Hero_Post extends Widget_Base {
                 'label'     => esc_html__( 'Border Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-article-hero:hover' => 'border-color: {{VALUE}};',
+                    '{{WRAPPER}} .article-card:hover' => 'border-color: {{VALUE}};',
                 ),
             )
         );
@@ -758,13 +760,13 @@ class Hero_Post extends Widget_Base {
                 'size_units' => array( 'px' ),
                 'range'      => array(
                     'px' => array(
-                        'min' => -20,
-                        'max' => 0,
+                        'min'  => -15,
+                        'max'  => 0,
                         'step' => 1,
                     ),
                 ),
                 'selectors'  => array(
-                    '{{WRAPPER}} .featured-article-hero:hover' => 'transform: translateY({{SIZE}}{{UNIT}});',
+                    '{{WRAPPER}} .article-card:hover' => 'transform: translateY({{SIZE}}{{UNIT}});',
                 ),
             )
         );
@@ -778,11 +780,10 @@ class Hero_Post extends Widget_Base {
             array(
                 'label'      => esc_html__( 'Content Padding', 'custom-theme' ),
                 'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => array( 'px', 'em', 'rem', '%' ),
+                'size_units' => array( 'px', 'em', 'rem' ),
                 'separator'  => 'before',
                 'selectors'  => array(
-                    '{{WRAPPER}} .featured-hero-content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                    '{{WRAPPER}} .featured-hero-cover-content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} .card-content' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ),
             )
         );
@@ -790,11 +791,11 @@ class Hero_Post extends Widget_Base {
         $this->add_responsive_control(
             'card_border_radius',
             array(
-                'label'      => esc_html__( 'Card Border Radius', 'custom-theme' ),
+                'label'      => esc_html__( 'Border Radius', 'custom-theme' ),
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => array( 'px', '%' ),
                 'selectors'  => array(
-                    '{{WRAPPER}} .featured-article-hero' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} .article-card' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ),
             )
         );
@@ -807,8 +808,11 @@ class Hero_Post extends Widget_Base {
         $this->start_controls_section(
             'section_style_media',
             array(
-                'label' => esc_html__( 'Image / Media', 'custom-theme' ),
-                'tab'   => Controls_Manager::TAB_STYLE,
+                'label'     => esc_html__( 'Featured Image', 'custom-theme' ),
+                'tab'       => Controls_Manager::TAB_STYLE,
+                'condition' => array(
+                    'show_thumbnail' => 'yes',
+                ),
             )
         );
 
@@ -837,13 +841,13 @@ class Hero_Post extends Widget_Base {
                     ),
                 ),
                 'default'   => array(
-                    'size' => 1.05,
+                    'size' => 1.04,
                 ),
                 'condition' => array(
                     'enable_hover_zoom' => 'yes',
                 ),
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-article-hero:hover .featured-hero-media img' => 'transform: scale({{SIZE}});',
+                    '{{WRAPPER}} .article-card:hover .card-media img' => 'transform: scale({{SIZE}});',
                 ),
             )
         );
@@ -855,21 +859,7 @@ class Hero_Post extends Widget_Base {
                 'type'       => Controls_Manager::DIMENSIONS,
                 'size_units' => array( 'px', '%' ),
                 'selectors'  => array(
-                    '{{WRAPPER}} .featured-hero-media' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ),
-            )
-        );
-
-        $this->add_control(
-            'cover_overlay_color',
-            array(
-                'label'     => esc_html__( 'Cover Gradient Overlay', 'custom-theme' ),
-                'type'      => Controls_Manager::COLOR,
-                'condition' => array(
-                    'layout_style' => 'cover',
-                ),
-                'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-cover-overlay' => 'background: linear-gradient(180deg, transparent 0%, {{VALUE}} 80%);',
+                    '{{WRAPPER}} .card-media' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ),
             )
         );
@@ -1015,7 +1005,7 @@ class Hero_Post extends Widget_Base {
             Group_Control_Typography::get_type(),
             array(
                 'name'     => 'title_typography',
-                'selector' => '{{WRAPPER}} .featured-hero-title',
+                'selector' => '{{WRAPPER}} .card-title',
             )
         );
 
@@ -1025,7 +1015,7 @@ class Hero_Post extends Widget_Base {
                 'label'     => esc_html__( 'Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-title a' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .card-title a' => 'color: {{VALUE}};',
                 ),
             )
         );
@@ -1036,7 +1026,7 @@ class Hero_Post extends Widget_Base {
                 'label'     => esc_html__( 'Hover Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-title a:hover' => 'color: {{VALUE}} !important;',
+                    '{{WRAPPER}} .card-title a:hover' => 'color: {{VALUE}} !important;',
                 ),
             )
         );
@@ -1050,11 +1040,11 @@ class Hero_Post extends Widget_Base {
                 'range'      => array(
                     'px' => array(
                         'min' => 0,
-                        'max' => 60,
+                        'max' => 40,
                     ),
                 ),
                 'selectors'  => array(
-                    '{{WRAPPER}} .featured-hero-title' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .card-title' => 'margin-bottom: {{SIZE}}{{UNIT}};',
                 ),
             )
         );
@@ -1076,7 +1066,7 @@ class Hero_Post extends Widget_Base {
             Group_Control_Typography::get_type(),
             array(
                 'name'      => 'excerpt_typography',
-                'selector'  => '{{WRAPPER}} .featured-hero-excerpt',
+                'selector'  => '{{WRAPPER}} .card-excerpt',
                 'condition' => array(
                     'show_excerpt' => 'yes',
                 ),
@@ -1089,7 +1079,7 @@ class Hero_Post extends Widget_Base {
                 'label'     => esc_html__( 'Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-excerpt' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .card-excerpt' => 'color: {{VALUE}};',
                 ),
                 'condition' => array(
                     'show_excerpt' => 'yes',
@@ -1106,14 +1096,14 @@ class Hero_Post extends Widget_Base {
                 'range'      => array(
                     'px' => array(
                         'min' => 0,
-                        'max' => 60,
+                        'max' => 40,
                     ),
                 ),
                 'condition'  => array(
                     'show_excerpt' => 'yes',
                 ),
                 'selectors'  => array(
-                    '{{WRAPPER}} .featured-hero-excerpt' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .card-excerpt' => 'margin-bottom: {{SIZE}}{{UNIT}};',
                 ),
             )
         );
@@ -1121,12 +1111,12 @@ class Hero_Post extends Widget_Base {
         $this->end_controls_section();
 
         // =========================================================================
-        // STYLE TAB: Metadata Byline
+        // STYLE TAB: Metadata Row
         // =========================================================================
         $this->start_controls_section(
             'section_style_meta',
             array(
-                'label' => esc_html__( 'Metadata Byline', 'custom-theme' ),
+                'label' => esc_html__( 'Metadata Row', 'custom-theme' ),
                 'tab'   => Controls_Manager::TAB_STYLE,
             )
         );
@@ -1135,7 +1125,7 @@ class Hero_Post extends Widget_Base {
             Group_Control_Typography::get_type(),
             array(
                 'name'     => 'meta_typography',
-                'selector' => '{{WRAPPER}} .featured-hero-meta, {{WRAPPER}} .featured-hero-meta .meta-item',
+                'selector' => '{{WRAPPER}} .card-footer .card-meta-left, {{WRAPPER}} .card-footer .meta-item',
             )
         );
 
@@ -1145,8 +1135,8 @@ class Hero_Post extends Widget_Base {
                 'label'     => esc_html__( 'Text Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-meta' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .featured-hero-meta .meta-item' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .card-footer .card-meta-left' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .card-footer .meta-item'       => 'color: {{VALUE}};',
                 ),
             )
         );
@@ -1157,7 +1147,7 @@ class Hero_Post extends Widget_Base {
                 'label'     => esc_html__( 'Link Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-meta a' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .card-footer a' => 'color: {{VALUE}};',
                 ),
             )
         );
@@ -1168,7 +1158,7 @@ class Hero_Post extends Widget_Base {
                 'label'     => esc_html__( 'Link Hover Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-meta a:hover' => 'color: {{VALUE}} !important;',
+                    '{{WRAPPER}} .card-footer a:hover' => 'color: {{VALUE}} !important;',
                 ),
             )
         );
@@ -1179,7 +1169,7 @@ class Hero_Post extends Widget_Base {
                 'label'     => esc_html__( 'Divider Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-meta .meta-divider' => 'color: {{VALUE}}; opacity: 1;',
+                    '{{WRAPPER}} .card-footer .meta-divider' => 'color: {{VALUE}}; opacity: 1;',
                 ),
             )
         );
@@ -1192,53 +1182,27 @@ class Hero_Post extends Widget_Base {
                 'size_units' => array( 'px' ),
                 'range'      => array(
                     'px' => array(
-                        'min' => 16,
-                        'max' => 60,
+                        'min' => 14,
+                        'max' => 40,
                     ),
                 ),
                 'default'    => array(
-                    'size' => 24,
+                    'size' => 20,
                 ),
                 'selectors'  => array(
-                    '{{WRAPPER}} .featured-hero-meta .author-avatar img' => 'width: {{SIZE}}{{UNIT}} !important; height: {{SIZE}}{{UNIT}} !important; border-radius: 50% !important; object-fit: cover !important;',
+                    '{{WRAPPER}} .card-footer .author-avatar img' => 'width: {{SIZE}}{{UNIT}} !important; height: {{SIZE}}{{UNIT}} !important; border-radius: 50% !important; object-fit: cover !important;',
                 ),
             )
         );
 
-        $this->add_responsive_control(
-            'avatar_border_radius',
+        $this->add_control(
+            'footer_border_color',
             array(
-                'label'      => esc_html__( 'Avatar Border Radius', 'custom-theme' ),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => array( 'px', '%' ),
-                'default'    => array(
-                    'top'      => 50,
-                    'right'    => 50,
-                    'bottom'   => 50,
-                    'left'     => 50,
-                    'unit'     => '%',
-                    'isLinked' => true,
-                ),
-                'selectors'  => array(
-                    '{{WRAPPER}} .featured-hero-meta .author-avatar img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}} !important;',
-                ),
-            )
-        );
-
-        $this->add_responsive_control(
-            'meta_spacing',
-            array(
-                'label'      => esc_html__( 'Bottom Spacing (px)', 'custom-theme' ),
-                'type'       => Controls_Manager::SLIDER,
-                'size_units' => array( 'px' ),
-                'range'      => array(
-                    'px' => array(
-                        'min' => 0,
-                        'max' => 60,
-                    ),
-                ),
-                'selectors'  => array(
-                    '{{WRAPPER}} .featured-hero-meta' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+                'label'     => esc_html__( 'Footer Border Color', 'custom-theme' ),
+                'type'      => Controls_Manager::COLOR,
+                'separator' => 'before',
+                'selectors' => array(
+                    '{{WRAPPER}} .card-footer' => 'border-top-color: {{VALUE}};',
                 ),
             )
         );
@@ -1246,15 +1210,15 @@ class Hero_Post extends Widget_Base {
         $this->end_controls_section();
 
         // =========================================================================
-        // STYLE TAB: CTA Button
+        // STYLE TAB: Pagination
         // =========================================================================
         $this->start_controls_section(
-            'section_style_cta',
+            'section_style_pagination',
             array(
-                'label'     => esc_html__( 'CTA Button', 'custom-theme' ),
+                'label'     => esc_html__( 'Pagination', 'custom-theme' ),
                 'tab'       => Controls_Manager::TAB_STYLE,
                 'condition' => array(
-                    'show_cta' => 'yes',
+                    'pagination_type!' => 'none',
                 ),
             )
         );
@@ -1262,135 +1226,40 @@ class Hero_Post extends Widget_Base {
         $this->add_group_control(
             Group_Control_Typography::get_type(),
             array(
-                'name'     => 'cta_typography',
-                'selector' => '{{WRAPPER}} .featured-hero-cta .btn',
-            )
-        );
-
-        $this->start_controls_tabs( 'tabs_cta_style' );
-
-        $this->start_controls_tab(
-            'tab_cta_normal',
-            array(
-                'label' => esc_html__( 'Normal', 'custom-theme' ),
+                'name'     => 'pagination_typography',
+                'selector' => '{{WRAPPER}} .editorial-pagination .page-numbers',
             )
         );
 
         $this->add_control(
-            'cta_bg_color',
-            array(
-                'label'     => esc_html__( 'Background Color', 'custom-theme' ),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-cta .btn' => 'background-color: {{VALUE}};',
-                ),
-            )
-        );
-
-        $this->add_control(
-            'cta_text_color',
+            'pagination_color',
             array(
                 'label'     => esc_html__( 'Text Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-cta .btn' => 'color: {{VALUE}} !important;',
-                    '{{WRAPPER}} .featured-hero-cta .btn *' => 'color: {{VALUE}} !important; stroke: {{VALUE}} !important;',
-                ),
-            )
-        );
-
-        $this->add_group_control(
-            Group_Control_Border::get_type(),
-            array(
-                'name'     => 'cta_border',
-                'selector' => '{{WRAPPER}} .featured-hero-cta .btn',
-            )
-        );
-
-        $this->add_group_control(
-            Group_Control_Box_Shadow::get_type(),
-            array(
-                'name'     => 'cta_box_shadow',
-                'selector' => '{{WRAPPER}} .featured-hero-cta .btn',
-            )
-        );
-
-        $this->end_controls_tab();
-
-        $this->start_controls_tab(
-            'tab_cta_hover',
-            array(
-                'label' => esc_html__( 'Hover', 'custom-theme' ),
-            )
-        );
-
-        $this->add_control(
-            'cta_bg_hover_color',
-            array(
-                'label'     => esc_html__( 'Background Color', 'custom-theme' ),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-cta .btn:hover' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} .editorial-pagination .page-numbers' => 'color: {{VALUE}};',
                 ),
             )
         );
 
         $this->add_control(
-            'cta_text_hover_color',
+            'pagination_active_bg',
             array(
-                'label'     => esc_html__( 'Text Color', 'custom-theme' ),
+                'label'     => esc_html__( 'Active Page Background', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-cta .btn:hover' => 'color: {{VALUE}} !important;',
-                    '{{WRAPPER}} .featured-hero-cta .btn:hover *' => 'color: {{VALUE}} !important; stroke: {{VALUE}} !important;',
+                    '{{WRAPPER}} .editorial-pagination .page-numbers.current' => 'background-color: {{VALUE}} !important; border-color: {{VALUE}} !important;',
                 ),
             )
         );
 
         $this->add_control(
-            'cta_border_hover_color',
+            'pagination_active_color',
             array(
-                'label'     => esc_html__( 'Border Color', 'custom-theme' ),
+                'label'     => esc_html__( 'Active Page Text Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .featured-hero-cta .btn:hover' => 'border-color: {{VALUE}};',
-                ),
-            )
-        );
-
-        $this->add_group_control(
-            Group_Control_Box_Shadow::get_type(),
-            array(
-                'name'     => 'cta_hover_box_shadow',
-                'selector' => '{{WRAPPER}} .featured-hero-cta .btn:hover',
-            )
-        );
-
-        $this->end_controls_tab();
-
-        $this->end_controls_tabs();
-
-        $this->add_responsive_control(
-            'cta_padding',
-            array(
-                'label'      => esc_html__( 'Padding', 'custom-theme' ),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => array( 'px', 'em', 'rem' ),
-                'separator'  => 'before',
-                'selectors'  => array(
-                    '{{WRAPPER}} .featured-hero-cta .btn' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ),
-            )
-        );
-
-        $this->add_responsive_control(
-            'cta_border_radius',
-            array(
-                'label'      => esc_html__( 'Border Radius', 'custom-theme' ),
-                'type'       => Controls_Manager::DIMENSIONS,
-                'size_units' => array( 'px', '%' ),
-                'selectors'  => array(
-                    '{{WRAPPER}} .featured-hero-cta .btn' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} .editorial-pagination .page-numbers.current' => 'color: {{VALUE}} !important;',
                 ),
             )
         );
@@ -1399,19 +1268,22 @@ class Hero_Post extends Widget_Base {
     }
 
     /**
-     * Query post based on widget settings
+     * Query posts based on widget settings
      *
      * @return \WP_Query
      */
     private function get_query() {
         $settings = $this->get_settings_for_display();
+        $paged    = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
+
+        $posts_per_page = ! empty( $settings['posts_per_page'] ) ? absint( $settings['posts_per_page'] ) : 6;
 
         $query_args = array(
             'post_type'           => 'post',
             'post_status'         => 'publish',
-            'posts_per_page'      => 1,
+            'posts_per_page'      => $posts_per_page,
+            'paged'               => $paged,
             'ignore_sticky_posts' => ( 'yes' === $settings['exclude_sticky'] ) ? 1 : 0,
-            'no_found_rows'       => true,
         );
 
         $source = ! empty( $settings['query_source'] ) ? $settings['query_source'] : 'latest';
@@ -1454,8 +1326,10 @@ class Hero_Post extends Widget_Base {
                 break;
 
             case 'manual':
-                if ( ! empty( $settings['manual_post_id'] ) ) {
-                    $query_args['p'] = absint( $settings['manual_post_id'] );
+                if ( ! empty( $settings['manual_post_ids'] ) ) {
+                    $manual_ids = array_map( 'absint', explode( ',', $settings['manual_post_ids'] ) );
+                    $query_args['post__in'] = $manual_ids;
+                    $query_args['orderby']  = 'post__in';
                 }
                 break;
         }
@@ -1526,28 +1400,30 @@ class Hero_Post extends Widget_Base {
             return;
         }
         ?>
-        <div class="featured-hero-meta entry-meta">
-            <?php
-            $has_prev = false;
-            if ( $show_author && function_exists( 'custom_theme_posted_by' ) ) {
-                custom_theme_posted_by( $show_avatar );
-                $has_prev = true;
-            }
-            if ( $show_date && function_exists( 'custom_theme_posted_on' ) ) {
-                if ( $has_prev && ! empty( $divider_char ) ) {
-                    echo '<span class="meta-divider">' . $divider_char . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        <footer class="card-footer entry-meta">
+            <div class="card-meta-left">
+                <?php
+                $has_prev = false;
+                if ( $show_author && function_exists( 'custom_theme_posted_by' ) ) {
+                    custom_theme_posted_by( $show_avatar );
+                    $has_prev = true;
                 }
-                custom_theme_posted_on();
-                $has_prev = true;
-            }
-            if ( $show_reading && function_exists( 'custom_theme_reading_time_badge' ) ) {
-                if ( $has_prev && ! empty( $divider_char ) ) {
-                    echo '<span class="meta-divider">' . $divider_char . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                if ( $show_date && function_exists( 'custom_theme_posted_on' ) ) {
+                    if ( $has_prev && ! empty( $divider_char ) ) {
+                        echo '<span class="meta-divider">' . $divider_char . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    }
+                    custom_theme_posted_on();
+                    $has_prev = true;
                 }
-                custom_theme_reading_time_badge();
-            }
-            ?>
-        </div>
+                if ( $show_reading && function_exists( 'custom_theme_reading_time_badge' ) ) {
+                    if ( $has_prev && ! empty( $divider_char ) ) {
+                        echo '<span class="meta-divider">' . $divider_char . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    }
+                    custom_theme_reading_time_badge();
+                }
+                ?>
+            </div>
+        </footer>
         <?php
     }
 
@@ -1560,156 +1436,119 @@ class Hero_Post extends Widget_Base {
 
         if ( ! $query->have_posts() ) {
             if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
-                echo '<div class="elementor-alert elementor-alert-info">' . esc_html__( 'No posts found matching your query criteria.', 'custom-theme' ) . '</div>';
+                echo '<div class="elementor-alert elementor-alert-info">' . esc_html__( 'No posts found matching the Posts Grid criteria.', 'custom-theme' ) . '</div>';
             }
             return;
         }
 
-        while ( $query->have_posts() ) :
-            $query->the_post();
+        $preset_style   = ! empty( $settings['card_style_preset'] ) ? $settings['card_style_preset'] : 'standard';
+        $show_thumb     = 'yes' === $settings['show_thumbnail'];
+        $show_badge     = 'yes' === $settings['show_badge'];
+        $badge_pos      = ! empty( $settings['badge_position'] ) ? $settings['badge_position'] : 'overlay';
+        $title_tag      = ! empty( $settings['title_tag'] ) ? $settings['title_tag'] : 'h3';
+        $show_excerpt   = 'yes' === $settings['show_excerpt'];
+        $excerpt_length = ! empty( $settings['excerpt_length'] ) ? absint( $settings['excerpt_length'] ) : 18;
+        $pagination     = ! empty( $settings['pagination_type'] ) ? $settings['pagination_type'] : 'none';
 
-            $layout_style   = ! empty( $settings['layout_style'] ) ? $settings['layout_style'] : 'split';
-            $image_position = ! empty( $settings['image_position'] ) ? $settings['image_position'] : 'left';
-            $title_tag      = ! empty( $settings['title_tag'] ) ? $settings['title_tag'] : 'h2';
-            $show_badge     = 'yes' === $settings['show_badge'];
-            $badge_pos      = ! empty( $settings['badge_position'] ) ? $settings['badge_position'] : 'overlay';
-            $show_excerpt   = 'yes' === $settings['show_excerpt'];
-            $excerpt_length = ! empty( $settings['excerpt_length'] ) ? absint( $settings['excerpt_length'] ) : 28;
-            $meta_pos       = ! empty( $settings['meta_position'] ) ? $settings['meta_position'] : 'below_excerpt';
-            $show_cta       = 'yes' === $settings['show_cta'];
-            $cta_text       = ! empty( $settings['cta_text'] ) ? $settings['cta_text'] : esc_html__( 'Read Full Article', 'custom-theme' );
-            $show_cta_icon  = 'yes' === $settings['show_cta_icon'];
+        $container_classes = array(
+            'editorial-posts-grid',
+            'elementor-post-grid',
+            'style-' . esc_attr( $preset_style ),
+        );
+        ?>
+        <div class="<?php echo esc_attr( implode( ' ', $container_classes ) ); ?>">
+            <?php
+            while ( $query->have_posts() ) :
+                $query->the_post();
+                ?>
+                <article id="post-<?php the_ID(); ?>" <?php post_class( 'article-card preset-' . esc_attr( $preset_style ) ); ?>>
 
-            $article_classes = array(
-                'featured-article-hero',
-                'elementor-hero-post',
-                'layout-' . esc_attr( $layout_style ),
-            );
-
-            if ( 'split' === $layout_style ) {
-                $article_classes[] = 'img-pos-' . esc_attr( $image_position );
-            }
-            ?>
-            <article id="post-<?php the_ID(); ?>" <?php post_class( implode( ' ', $article_classes ) ); ?>>
-
-                <?php if ( 'cover' === $layout_style ) : ?>
-                    <!-- Cover Layout Style -->
-                    <div class="featured-hero-cover" style="<?php if ( has_post_thumbnail() ) : ?>background-image: url('<?php echo esc_url( get_the_post_thumbnail_url( get_the_ID(), 'custom-theme-featured' ) ); ?>');<?php endif; ?>">
-                        <div class="featured-hero-cover-overlay"></div>
-                        <div class="featured-hero-cover-content">
-
-                            <?php if ( $show_badge && function_exists( 'custom_theme_category_badge' ) ) : ?>
-                                <div class="featured-hero-badge-overlay">
-                                    <?php custom_theme_category_badge(); ?>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ( 'above_title' === $meta_pos ) : ?>
-                                <?php $this->render_meta( $settings ); ?>
-                            <?php endif; ?>
-
-                            <<?php echo esc_attr( $title_tag ); ?> class="featured-hero-title">
-                                <a href="<?php echo esc_url( get_permalink() ); ?>" rel="bookmark">
-                                    <?php the_title(); ?>
-                                </a>
-                            </<?php echo esc_attr( $title_tag ); ?>>
-
-                            <?php if ( $show_excerpt ) : ?>
-                                <div class="featured-hero-excerpt lead">
-                                    <?php echo esc_html( wp_trim_words( get_the_excerpt(), $excerpt_length ) ); ?>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ( 'below_excerpt' === $meta_pos ) : ?>
-                                <?php $this->render_meta( $settings ); ?>
-                            <?php endif; ?>
-
-                            <?php if ( $show_cta ) : ?>
-                                <div class="featured-hero-cta">
-                                    <a href="<?php echo esc_url( get_permalink() ); ?>" class="btn btn-primary">
-                                        <span><?php echo esc_html( $cta_text ); ?></span>
-                                        <?php
-                                        if ( $show_cta_icon && function_exists( 'custom_theme_svg_icon' ) ) {
-                                            echo custom_theme_svg_icon( 'arrow-right' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                        }
-                                        ?>
-                                    </a>
-                                </div>
-                            <?php endif; ?>
-
-                        </div><!-- .featured-hero-cover-content -->
-                    </div><!-- .featured-hero-cover -->
-
-                <?php else : ?>
-                    <!-- Split / Stacked Layout Style -->
-                    <div class="featured-hero-inner <?php echo ( 'split' === $layout_style && 'right' === $image_position ) ? 'img-on-right' : ''; ?> <?php echo ( 'stacked' === $layout_style ) ? 'layout-stacked' : ''; ?>">
-                        
-                        <!-- Media Container -->
-                        <div class="featured-hero-media">
+                    <?php if ( $show_thumb && has_post_thumbnail() ) : ?>
+                        <!-- Thumbnail & Category Overlay -->
+                        <div class="card-media">
                             <?php
                             if ( function_exists( 'custom_theme_post_thumbnail' ) ) {
-                                custom_theme_post_thumbnail( 'custom-theme-featured', true, 'featured-hero-thumbnail', false );
+                                custom_theme_post_thumbnail( 'custom-theme-card', true );
                             } else {
-                                the_post_thumbnail( 'custom-theme-featured' );
+                                the_post_thumbnail( 'custom-theme-card' );
                             }
                             ?>
                             <?php if ( $show_badge && 'overlay' === $badge_pos && function_exists( 'custom_theme_category_badge' ) ) : ?>
-                                <div class="featured-hero-badge-overlay">
+                                <div class="card-category-overlay">
                                     <?php custom_theme_category_badge(); ?>
                                 </div>
                             <?php endif; ?>
                         </div>
+                    <?php endif; ?>
 
-                        <!-- Content Details -->
-                        <div class="featured-hero-content">
+                    <!-- Content Body -->
+                    <div class="card-content">
 
-                            <?php if ( $show_badge && 'inline' === $badge_pos && function_exists( 'custom_theme_category_badge' ) ) : ?>
-                                <div class="featured-hero-badge-inline" style="margin-bottom: var(--space-xs);">
-                                    <?php custom_theme_category_badge(); ?>
-                                </div>
-                            <?php endif; ?>
+                        <?php if ( $show_badge && ( 'inline' === $badge_pos || ! has_post_thumbnail() || ! $show_thumb ) && function_exists( 'custom_theme_category_badge' ) ) : ?>
+                            <div class="card-category-inline" style="margin-bottom: var(--space-2xs);">
+                                <?php custom_theme_category_badge(); ?>
+                            </div>
+                        <?php endif; ?>
 
-                            <?php if ( 'above_title' === $meta_pos ) : ?>
-                                <?php $this->render_meta( $settings ); ?>
-                            <?php endif; ?>
-                            
-                            <<?php echo esc_attr( $title_tag ); ?> class="featured-hero-title">
-                                <a href="<?php echo esc_url( get_permalink() ); ?>" rel="bookmark">
-                                    <?php the_title(); ?>
-                                </a>
-                            </<?php echo esc_attr( $title_tag ); ?>>
+                        <<?php echo esc_attr( $title_tag ); ?> class="card-title">
+                            <a href="<?php echo esc_url( get_permalink() ); ?>" rel="bookmark">
+                                <?php the_title(); ?>
+                            </a>
+                        </<?php echo esc_attr( $title_tag ); ?>>
 
-                            <?php if ( $show_excerpt ) : ?>
-                                <div class="featured-hero-excerpt lead">
-                                    <?php echo esc_html( wp_trim_words( get_the_excerpt(), $excerpt_length ) ); ?>
-                                </div>
-                            <?php endif; ?>
+                        <?php if ( $show_excerpt ) : ?>
+                            <div class="card-excerpt">
+                                <p><?php echo esc_html( wp_trim_words( get_the_excerpt(), $excerpt_length ) ); ?></p>
+                            </div>
+                        <?php endif; ?>
 
-                            <?php if ( 'below_excerpt' === $meta_pos ) : ?>
-                                <?php $this->render_meta( $settings ); ?>
-                            <?php endif; ?>
+                        <?php $this->render_meta( $settings ); ?>
 
-                            <?php if ( $show_cta ) : ?>
-                                <div class="featured-hero-cta">
-                                    <a href="<?php echo esc_url( get_permalink() ); ?>" class="btn btn-primary">
-                                        <span><?php echo esc_html( $cta_text ); ?></span>
-                                        <?php
-                                        if ( $show_cta_icon && function_exists( 'custom_theme_svg_icon' ) ) {
-                                            echo custom_theme_svg_icon( 'arrow-right' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                        }
-                                        ?>
-                                    </a>
-                                </div>
-                            <?php endif; ?>
+                    </div><!-- .card-content -->
 
-                        </div><!-- .featured-hero-content -->
+                </article><!-- #post-<?php the_ID(); ?> -->
+                <?php
+            endwhile;
+            ?>
+        </div><!-- .editorial-posts-grid -->
 
-                    </div><!-- .featured-hero-inner -->
-                <?php endif; ?>
-
-            </article><!-- #post-<?php the_ID(); ?> -->
+        <?php
+        // Pagination Rendering
+        if ( 'none' !== $pagination && $query->max_num_pages > 1 ) :
+            ?>
+            <nav class="editorial-pagination elementor-pagination" aria-label="<?php esc_attr_e( 'Posts navigation', 'custom-theme' ); ?>" style="margin-top: var(--space-xl); display: flex; justify-content: center; gap: var(--space-xs);">
+                <?php
+                $big = 999999999;
+                if ( 'numbers' === $pagination ) {
+                    echo paginate_links( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                        array(
+                            'base'      => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+                            'format'    => '?paged=%#%',
+                            'current'   => max( 1, get_query_var( 'paged' ) ),
+                            'total'     => $query->max_num_pages,
+                            'prev_text' => '&larr; ' . esc_html__( 'Previous', 'custom-theme' ),
+                            'next_text' => esc_html__( 'Next', 'custom-theme' ) . ' &rarr;',
+                            'type'      => 'plain',
+                        )
+                    );
+                } elseif ( 'prev_next' === $pagination ) {
+                    echo paginate_links( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                        array(
+                            'base'      => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+                            'format'    => '?paged=%#%',
+                            'current'   => max( 1, get_query_var( 'paged' ) ),
+                            'total'     => $query->max_num_pages,
+                            'prev_next' => true,
+                            'show_all'  => false,
+                            'prev_text' => '&larr; ' . esc_html__( 'Previous Page', 'custom-theme' ),
+                            'next_text' => esc_html__( 'Next Page', 'custom-theme' ) . ' &rarr;',
+                        )
+                    );
+                }
+                ?>
+            </nav>
             <?php
-        endwhile;
+        endif;
 
         wp_reset_postdata();
     }

@@ -76,6 +76,13 @@ class Custom_Theme_Elementor_Integration {
             require_once $hero_widget_file;
             $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Hero_Post() );
         }
+
+        // Widget 2: Editorial Posts Grid
+        $grid_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-post-grid.php';
+        if ( file_exists( $grid_widget_file ) ) {
+            require_once $grid_widget_file;
+            $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Post_Grid() );
+        }
     }
 
     /**
@@ -91,6 +98,12 @@ class Custom_Theme_Elementor_Integration {
         if ( file_exists( $hero_widget_file ) ) {
             require_once $hero_widget_file;
             $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Hero_Post() );
+        }
+
+        $grid_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-post-grid.php';
+        if ( file_exists( $grid_widget_file ) ) {
+            require_once $grid_widget_file;
+            $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Post_Grid() );
         }
     }
 }
