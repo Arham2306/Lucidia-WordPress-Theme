@@ -132,6 +132,13 @@ class Custom_Theme_Elementor_Integration {
             require_once $social_widget_file;
             $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Social_Share() );
         }
+
+        // Widget 10: Editorial Navigation Menu
+        $nav_menu_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-nav-menu.php';
+        if ( file_exists( $nav_menu_widget_file ) ) {
+            require_once $nav_menu_widget_file;
+            $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Nav_Menu() );
+        }
     }
 
     /**
@@ -195,6 +202,12 @@ class Custom_Theme_Elementor_Integration {
         if ( file_exists( $social_widget_file ) ) {
             require_once $social_widget_file;
             $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Social_Share() );
+        }
+
+        $nav_menu_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-nav-menu.php';
+        if ( file_exists( $nav_menu_widget_file ) ) {
+            require_once $nav_menu_widget_file;
+            $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Nav_Menu() );
         }
     }
 }

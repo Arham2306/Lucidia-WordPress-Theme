@@ -30,6 +30,7 @@
         initAjaxPagination();
         initTableOfContents();
         initReadingMode();
+        initElementorNavMenus();
     });
 
     /**
@@ -1091,5 +1092,73 @@
         }
     }
 
+    /**
+     * 10. Elementor Editorial Navigation Menu Widget Handler
+     */
+    function initElementorNavMenus() {
+        const navWidgets = document.querySelectorAll('.editorial-nav-menu-widget');
+        if (!navWidgets.length) return;
+
+        navWidgets.forEach(widget => {
+            if (widget.dataset.navInitialized) return;
+            widget.dataset.navInitialized = 'true';
+
+            const toggleBtn = widget.querySelector('.editorial-menu-toggle');
+            const container = widget.querySelector('.editorial-nav-container');
+            const iconOpen = widget.querySelector('.toggle-icon-open');
+            const iconClose = widget.querySelector('.toggle-icon-close');
+
+            if (toggleBtn && container) {
+                toggleBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+                    const willOpen = !isExpanded;
+
+                    toggleBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+                    container.classList.toggle('is-open', willOpen);
+
+                    if (iconOpen && iconClose) {
+                        iconOpen.style.display = willOpen ? 'none' : 'inline-flex';
+                        iconClose.style.display = willOpen ? 'inline-flex' : 'none';
+                    }
+                });
+            }
+
+            // Mobile Accordion for Submenu items inside this widget
+            const parentItems = widget.querySelectorAll('.editorial-nav-list .menu-item-has-children, .editorial-nav-list .page_item_has_children');
+            parentItems.forEach(item => {
+                const subMenu = item.querySelector('.sub-menu, .children');
+                if (!subMenu) return;
+
+                const parentLink = item.querySelector(':scope > a');
+                if (parentLink) {
+                    parentLink.addEventListener('click', function (e) {
+                        const isMobileView = window.innerWidth <= 1024;
+                        if (isMobileView && (parentLink.getAttribute('href') === '#' || parentLink.getAttribute('href') === '')) {
+                            e.preventDefault();
+                            subMenu.classList.toggle('is-open');
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    // Bind Elementor frontend hook if active
+    if (window.elementorFrontend) {
+        window.elementorFrontend.hooks.addAction('frontend/element_ready/custom_theme_nav_menu.default', function () {
+            initElementorNavMenus();
+        });
+    } else {
+        window.addEventListener('elementor/frontend/init', function () {
+            if (window.elementorFrontend && window.elementorFrontend.hooks) {
+                window.elementorFrontend.hooks.addAction('frontend/element_ready/custom_theme_nav_menu.default', function () {
+                    initElementorNavMenus();
+                });
+            }
+        });
+    }
+
 })();
+
 
