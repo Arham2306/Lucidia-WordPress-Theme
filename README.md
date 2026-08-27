@@ -15,7 +15,7 @@
 - ⚡ **Core Web Vitals Optimized**: 100/100 performance potential with deferred JavaScript, self-hosted WOFF2 fonts, LCP eager image preloading, and zero external blocking assets.
 - 🌓 **Instant Dark Mode & Reader Mode**: Seamless theme switching with OS auto-detection, distraction-free reading mode (Light, Sepia, Dark), and custom font scaling.
 - 🔍 **Instant Smart Live Search**: Lightning-fast AJAX live search overlay with debounced queries, search history, and full keyboard navigation (`/`, `Cmd/Ctrl+K`, `Escape`).
-- 🧩 **Handcrafted Elementor Widget Suite**: 10 bespoke editorial widgets built natively for Elementor with deep query builders, select2 multi-filtering, line clamps, and responsive styling controls.
+- 🧩 **Handcrafted Elementor Widget Suite**: 11 bespoke editorial widgets built natively for Elementor with deep query builders, select2 multi-filtering, line clamps, and responsive styling controls.
 - 📑 **Cached Table of Contents**: Automated `h2`/`h3` heading parser with WordPress transient caching and smooth scroll tracking.
 - 🎨 **Fluid Typography & Design System**: Responsive CSS custom properties, balanced modular scale, editorial serif/sans pairings, and custom SVG icon system.
 - ♿ **Accessibility & Standards Compliant**: WCAG 2.1 AA compliant, ARIA landmarks, visible focus rings, skip-to-content links, and full Schema.org structured microdata.
@@ -24,7 +24,7 @@
 
 ## 🧩 Bespoke Elementor Widget Suite
 
-Lucidia includes a dedicated **Lucidia** category in Elementor with 10 handcrafted editorial widgets:
+Lucidia includes a dedicated **Lucidia** category in Elementor with 11 handcrafted editorial widgets:
 
 | Widget | Description | Key Capabilities |
 |---|---|---|
@@ -38,6 +38,8 @@ Lucidia includes a dedicated **Lucidia** category in Elementor with 10 handcraft
 | **Author Spotlight Card** | Rich author biography profile card | Current post author, dropdown registered user, or custom manual profile; circular avatar with ring border; post counter; bio; social links (X, LinkedIn, FB, Website, Email). |
 | **Interactive Social Share Bar** | Multi-network viral share bar | X / Twitter, Facebook, LinkedIn, Email; 1-click clipboard copy with animated toast tooltip; Horizontal/Vertical orientations; 5 button presets. |
 | **Editorial Navigation Menu** | Standalone responsive nav & menu builder | Horizontal bar, Vertical list, or Scrollable Pill strip; 4 pointer indicators (`Underline`, `Pill`, `Dot`, `Framed`); 3-level dropdown depth with animations; tablet/mobile responsive accordions. |
+| **Editorial Smart Search** | In-page real-time search bar & modal trigger | 3 display modes (`Inline Live Search`, `Modal Trigger Button`, `Classic Form`); debounced REST API live dropdown with thumbnails, categories & dates; `⌘K` shortcut chip. |
+
 
 
 ---

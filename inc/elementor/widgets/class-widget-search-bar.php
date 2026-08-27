@@ -580,7 +580,7 @@ class Search_Bar extends Widget_Base {
                 'label'     => esc_html__( 'Clear (X) Button Color', 'custom-theme' ),
                 'type'      => Controls_Manager::COLOR,
                 'selectors' => array(
-                    '{{WRAPPER}} .search-clear-btn' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .editorial-search-clear-btn' => 'color: {{VALUE}};',
                 ),
                 'condition' => array(
                     'show_clear_btn' => 'yes',
@@ -675,13 +675,47 @@ class Search_Bar extends Widget_Base {
             )
         );
 
-        $this->add_control(
-            'result_title_hover_color',
+        $this->add_responsive_control(
+            'result_thumb_width',
             array(
-                'label'     => esc_html__( 'Story Title Hover Color', 'custom-theme' ),
-                'type'      => Controls_Manager::COLOR,
-                'selectors' => array(
-                    '{{WRAPPER}} .editorial-search-result-item:hover .result-item-title' => 'color: {{VALUE}} !important;',
+                'label'      => esc_html__( 'Thumbnail Width', 'custom-theme' ),
+                'type'       => Controls_Manager::SLIDER,
+                'size_units' => array( 'px' ),
+                'range'      => array(
+                    'px' => array( 'min' => 30, 'max' => 120 ),
+                ),
+                'default'    => array( 'size' => 54 ),
+                'separator'  => 'before',
+                'selectors'  => array(
+                    '{{WRAPPER}} .result-item-thumb' => 'width: {{SIZE}}{{UNIT}};',
+                ),
+            )
+        );
+
+        $this->add_responsive_control(
+            'result_thumb_height',
+            array(
+                'label'      => esc_html__( 'Thumbnail Height', 'custom-theme' ),
+                'type'       => Controls_Manager::SLIDER,
+                'size_units' => array( 'px' ),
+                'range'      => array(
+                    'px' => array( 'min' => 30, 'max' => 120 ),
+                ),
+                'default'    => array( 'size' => 54 ),
+                'selectors'  => array(
+                    '{{WRAPPER}} .result-item-thumb' => 'height: {{SIZE}}{{UNIT}};',
+                ),
+            )
+        );
+
+        $this->add_responsive_control(
+            'result_thumb_radius',
+            array(
+                'label'      => esc_html__( 'Thumbnail Border Radius', 'custom-theme' ),
+                'type'       => Controls_Manager::DIMENSIONS,
+                'size_units' => array( 'px', '%' ),
+                'selectors'  => array(
+                    '{{WRAPPER}} .result-item-thumb' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ),
             )
         );
@@ -911,12 +945,12 @@ class Search_Bar extends Widget_Base {
                             aria-label="<?php esc_attr_e( 'Search query', 'custom-theme' ); ?>">
 
                         <!-- Search Loading Spinner -->
-                        <span class="search-spinner" aria-hidden="true" style="display: none;">
+                        <span class="editorial-search-spinner" aria-hidden="true" style="display: none;">
                             <svg class="search-spinner-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-linecap="round"></circle></svg>
                         </span>
 
                         <?php if ( 'inline_live' === $mode && $show_clear ) : ?>
-                            <button type="button" class="search-clear-btn" aria-label="<?php esc_attr_e( 'Clear search query', 'custom-theme' ); ?>" style="display: none;">
+                            <button type="button" class="editorial-search-clear-btn" aria-label="<?php esc_attr_e( 'Clear search query', 'custom-theme' ); ?>" style="display: none;">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                             </button>
                         <?php endif; ?>
