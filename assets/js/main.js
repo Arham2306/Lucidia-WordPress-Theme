@@ -31,6 +31,7 @@
         initTableOfContents();
         initReadingMode();
         initElementorNavMenus();
+        initElementorSearchWidgets();
     });
 
     /**

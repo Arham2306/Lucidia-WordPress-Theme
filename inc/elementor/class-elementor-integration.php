@@ -139,6 +139,13 @@ class Custom_Theme_Elementor_Integration {
             require_once $nav_menu_widget_file;
             $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Nav_Menu() );
         }
+
+        // Widget 11: Editorial Smart Search
+        $search_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-search-bar.php';
+        if ( file_exists( $search_widget_file ) ) {
+            require_once $search_widget_file;
+            $widgets_manager->register( new \CustomTheme\Elementor\Widgets\Search_Bar() );
+        }
     }
 
     /**
@@ -208,6 +215,12 @@ class Custom_Theme_Elementor_Integration {
         if ( file_exists( $nav_menu_widget_file ) ) {
             require_once $nav_menu_widget_file;
             $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Nav_Menu() );
+        }
+
+        $search_widget_file = CUSTOM_THEME_DIR . '/inc/elementor/widgets/class-widget-search-bar.php';
+        if ( file_exists( $search_widget_file ) ) {
+            require_once $search_widget_file;
+            $widgets_manager->register_widget_type( new \CustomTheme\Elementor\Widgets\Search_Bar() );
         }
     }
 }
