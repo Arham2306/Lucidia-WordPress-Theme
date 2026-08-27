@@ -27,7 +27,6 @@
         initReadingProgress();
         initBackToTop();
         initShareButtons();
-        initSubmenuToggles();
         initAjaxPagination();
         initTableOfContents();
         initReadingMode();
@@ -203,6 +202,61 @@
                     firstEl.focus();
                     e.preventDefault();
                 }
+            }
+        });
+
+        // Purge any inline chevrons that may have been rendered inside the mobile drawer
+        drawer.querySelectorAll('.nav-dropdown-chevron').forEach(el => el.remove());
+
+        // Setup Mobile Submenu Accordion Toggles
+        const menuItemsWithChildren = drawer.querySelectorAll('.mobile-nav-list .menu-item-has-children, .mobile-nav-list .page_item_has_children');
+        menuItemsWithChildren.forEach(item => {
+            const subMenu = item.querySelector('.sub-menu, .children');
+            if (!subMenu) return;
+
+            // Remove any nested inline chevrons inside link text
+            const inlineChevron = item.querySelector(':scope > a .nav-dropdown-chevron');
+            if (inlineChevron) inlineChevron.remove();
+
+            let toggleBtn = item.querySelector('.mobile-submenu-toggle');
+            if (!toggleBtn) {
+                toggleBtn = document.createElement('button');
+                toggleBtn.type = 'button';
+                toggleBtn.className = 'mobile-submenu-toggle';
+                toggleBtn.setAttribute('aria-expanded', 'false');
+                toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+                toggleBtn.innerHTML = '<svg class="icon icon-chevron-down" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+
+                const parentLink = item.querySelector(':scope > a');
+                if (parentLink) {
+                    parentLink.insertAdjacentElement('afterend', toggleBtn);
+                } else {
+                    item.insertBefore(toggleBtn, subMenu);
+                }
+            }
+
+            toggleBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+
+                if (isExpanded) {
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                    toggleBtn.classList.remove('is-active');
+                    subMenu.classList.remove('is-open');
+                } else {
+                    toggleBtn.setAttribute('aria-expanded', 'true');
+                    toggleBtn.classList.add('is-active');
+                    subMenu.classList.add('is-open');
+                }
+            });
+
+            const parentLink = item.querySelector(':scope > a');
+            if (parentLink && (parentLink.getAttribute('href') === '#' || parentLink.getAttribute('href') === '')) {
+                parentLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    toggleBtn.click();
+                });
             }
         });
     }
@@ -728,41 +782,7 @@
     }
 
     /**
-     * 7. Mobile Submenu Toggle Indicators
-     */
-    function initSubmenuToggles() {
-        const menuItemsWithChildren = document.querySelectorAll('.mobile-nav-list .menu-item-has-children');
-        
-        menuItemsWithChildren.forEach(item => {
-            const link = item.querySelector(':scope > a');
-            if (!link) return;
-
-            const toggleBtn = document.createElement('button');
-            toggleBtn.className = 'submenu-toggle';
-            toggleBtn.setAttribute('aria-expanded', 'false');
-            toggleBtn.setAttribute('aria-label', 'Toggle Submenu');
-            toggleBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>';
-
-            link.after(toggleBtn);
-        });
-
-        const mobileNavList = document.querySelector('.mobile-nav-list');
-        if (mobileNavList) {
-            mobileNavList.addEventListener('click', function(e) {
-                const toggleBtn = e.target.closest('.submenu-toggle');
-                if (!toggleBtn) return;
-                
-                e.preventDefault();
-                const item = toggleBtn.closest('.menu-item-has-children');
-                const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
-                toggleBtn.setAttribute('aria-expanded', !isExpanded);
-                if (item) item.classList.toggle('submenu-open', !isExpanded);
-            });
-        }
-    }
-
-    /**
-     * 8. AJAX Pagination (Load More Button & Infinite Scroll)
+     * 7. AJAX Pagination (Load More Button & Infinite Scroll)
      */
     function initAjaxPagination() {
         const container = document.querySelector('.ajax-pagination-container');

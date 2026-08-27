@@ -112,12 +112,17 @@ add_action( 'after_setup_theme', 'custom_theme_content_width', 0 );
  * Enqueue scripts and styles.
  */
 function custom_theme_scripts() {
+    $css_file = CUSTOM_THEME_DIR . '/assets/css/main.css';
+    $js_file  = CUSTOM_THEME_DIR . '/assets/js/main.js';
+    $css_ver  = file_exists( $css_file ) ? CUSTOM_THEME_VERSION . '.' . filemtime( $css_file ) : CUSTOM_THEME_VERSION;
+    $js_ver   = file_exists( $js_file ) ? CUSTOM_THEME_VERSION . '.' . filemtime( $js_file ) : CUSTOM_THEME_VERSION;
+
     // Base WordPress theme stylesheet (core alignment, captions, accessibility, print).
     wp_enqueue_style(
         'custom-theme-style',
         get_stylesheet_uri(),
         array(),
-        CUSTOM_THEME_VERSION
+        $css_ver
     );
 
     // Main Theme CSS (includes self-hosted @font-face for Inter & Lora)
@@ -125,7 +130,7 @@ function custom_theme_scripts() {
         'custom-theme-main',
         CUSTOM_THEME_URI . '/assets/css/main.css',
         array( 'custom-theme-style' ),
-        CUSTOM_THEME_VERSION
+        $css_ver
     );
 
     // Main Theme JavaScript
@@ -133,7 +138,7 @@ function custom_theme_scripts() {
         'custom-theme-main',
         CUSTOM_THEME_URI . '/assets/js/main.js',
         array(),
-        CUSTOM_THEME_VERSION,
+        $js_ver,
         true
     );
 

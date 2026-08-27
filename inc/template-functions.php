@@ -244,3 +244,41 @@ function custom_theme_svg_icon( $name, $class = '' ) {
 
     return isset( $icons[ $name ] ) ? $icons[ $name ] : '';
 }
+
+/**
+ * Append dropdown chevron icon to navigation menu items that have children.
+ *
+ * @param string   $title The menu item's title.
+ * @param \WP_Post $item  The current menu item.
+ * @param \stdClass $args  An object of wp_nav_menu() arguments.
+ * @param int      $depth Depth of menu item.
+ * @return string Modified title.
+ */
+function custom_theme_nav_menu_dropdown_icon( $title, $item, $args, $depth ) {
+    // Exclude mobile navigation
+    if ( is_object( $args ) ) {
+        if ( ! empty( $args->menu_class ) && false !== strpos( $args->menu_class, 'mobile' ) ) {
+            return $title;
+        }
+        if ( ! empty( $args->menu_id ) && false !== strpos( $args->menu_id, 'mobile' ) ) {
+            return $title;
+        }
+    } elseif ( is_array( $args ) ) {
+        if ( ! empty( $args['menu_class'] ) && false !== strpos( $args['menu_class'], 'mobile' ) ) {
+            return $title;
+        }
+        if ( ! empty( $args['menu_id'] ) && false !== strpos( $args['menu_id'], 'mobile' ) ) {
+            return $title;
+        }
+    }
+
+    if ( ! empty( $item->classes ) && in_array( 'menu-item-has-children', (array) $item->classes, true ) ) {
+        if ( false === strpos( $title, 'nav-dropdown-chevron' ) ) {
+            $title .= '<span class="nav-dropdown-chevron" aria-hidden="true">' . custom_theme_svg_icon( 'chevron-down' ) . '</span>';
+        }
+    }
+    return $title;
+}
+add_filter( 'nav_menu_item_title', 'custom_theme_nav_menu_dropdown_icon', 10, 4 );
+
+
